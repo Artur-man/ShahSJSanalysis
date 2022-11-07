@@ -78,9 +78,6 @@ for(i in 1:length(idents)){
   top_adtmarkers[[idents[i]]] <- adtmarkers[[idents[i]]] %>% group_by(cluster) %>% slice_max(avg_log2FC, n = 12)
 }
 
-# save(rnamarkers, adtmarkers, top_adtmarkers, top_rnamarkers, file = "../../RDSfiles/sjs_integrated_all_norps_filter2_res06_mainanalysis3_cluster0_markers.rdata")
-# load("../../../RDSfiles/sjs_integrated_all_norps_filter2_res06_mainanalysis3_cluster0_markers.rdata")
-
 ## SubCluster 1 of res 0.6 ####
 
 ## split and filter ####
@@ -161,8 +158,6 @@ for(i in 1:length(idents)){
   adtmarkers[[idents[i]]] <- FindAllMarkers(bri.integrated_cluster1, only.pos = TRUE, min.pct = 0.1, logfc.threshold = 0.25)
   top_adtmarkers[[idents[i]]] <- adtmarkers[[idents[i]]] %>% group_by(cluster) %>% slice_max(avg_log2FC, n = 12)
 }
-# save(rnamarkers, adtmarkers, top_adtmarkers, top_rnamarkers, file = "../../RDSfiles/sjs_integrated_all_norps_filter2_res06_mainanalysis3_cluster1_markers.rdata")
-# load("../../../RDSfiles/sjs_integrated_all_norps_filter2_res06_mainanalysis3_cluster1_markers.rdata")
 
 ## SubCluster 9 of res 0.6 ####
 
@@ -214,10 +209,6 @@ p5 + p6 + p7 + p8
 ## Find ALL Markers #######
 ####
 
-# When finding markers, ensure DefaultAssay(bri.integrated) <- "RNA", since analysis is on Counts, not Assay Integrated (which was just used to anchors for 
-# integrating the data) once you know which cell is from which cell type, then use the Counts as your underlying data set
-# actually, DoHeatmap didn't work on Assay RNA... so had to change to integrated.
-
 res <- c("0.4","0.6","0.8","1","1.2","1.4","1.6","1.8","2")
 idents <- paste0("wsnn_res.",res)
 rnamarkers <- adtmarkers <- top_rnamarkers <- top_adtmarkers <- list()
@@ -237,8 +228,6 @@ for(i in 1:length(idents)){
   adtmarkers[[idents[i]]] <- FindAllMarkers(bri.integrated_cluster9, only.pos = TRUE, min.pct = 0.1, logfc.threshold = 0.25)
   top_adtmarkers[[idents[i]]] <- adtmarkers[[idents[i]]] %>% group_by(cluster) %>% slice_max(avg_log2FC, n = 12)
 }
-# save(rnamarkers, adtmarkers, top_adtmarkers, top_rnamarkers, file = "../../RDSfiles/sjs_integrated_all_norps_filter2_res06_mainanalysis3_cluster9_markers.rdata")
-# load("../../RDSfiles/sjs_integrated_all_norps_filter2_res06_mainanalysis3_cluster9_markers.rdata")
 
 ## SubCluster 8 of res 0.6 ####
 
@@ -290,10 +279,6 @@ p5 + p6 + p7 + p8
 ## Find ALL Markers #######
 ####
 
-# When finding markers, ensure DefaultAssay(bri.integrated) <- "RNA", since analysis is on Counts, not Assay Integrated (which was just used to anchors for 
-# integrating the data) once you know which cell is from which cell type, then use the Counts as your underlying data set
-# actually, DoHeatmap didn't work on Assay RNA... so had to change to integrated.
-
 res <- c("0.4","0.6","0.8","1","1.2","1.4","1.6","1.8","2")
 idents <- paste0("wsnn_res.",res)
 rnamarkers <- adtmarkers <- top_rnamarkers <- top_adtmarkers <- list()
@@ -313,8 +298,6 @@ for(i in 1:length(idents)){
   adtmarkers[[idents[i]]] <- FindAllMarkers(bri.integrated_cluster8, only.pos = TRUE, min.pct = 0.1, logfc.threshold = 0.25)
   top_adtmarkers[[idents[i]]] <- adtmarkers[[idents[i]]] %>% group_by(cluster) %>% slice_max(avg_log2FC, n = 12)
 }
-# save(rnamarkers, adtmarkers, top_adtmarkers, top_rnamarkers, file = "../../../RDSfiles/sjs_integrated_all_norps_filter2_res06_mainanalysis3_cluster8_markers.rdata")
-# load("../../RDSfiles/sjs_integrated_all_norps_filter2_res06_mainanalysis3_cluster8_markers.rdata")
 
 ## Save all subclusterings ####
 save(bri.integrated_cluster0, bri.integrated_cluster1, bri.integrated_cluster9, bri.integrated_cluster8, file = "sjs_clustered_tcr_subclusters.Rdata")
