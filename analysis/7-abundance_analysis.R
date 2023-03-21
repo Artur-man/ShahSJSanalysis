@@ -35,18 +35,18 @@ rna_counts <- bri.integrated@assays$integratedRNA@data
 agg_cytotoxic <- colMeans(rna_counts[cytotoxic_markers,])
 bri.integrated$cytotoxic_expression <- agg_cytotoxic
 DefaultAssay(bri.integrated) <- "integratedRNA"
-VlnPlot(bri.integrated, features = "NKG7", group.by = "CellTypePranali") + NoLegend() + geom_hline(yintercept = 2, linetype='dashed')
-VlnPlot(bri.integrated, features = "GZMA", group.by = "CellTypePranali") + NoLegend() + geom_hline(yintercept = 1, linetype='dashed')
-VlnPlot(bri.integrated, features = "GZMB", group.by = "CellTypePranali") + NoLegend() + geom_hline(yintercept = 0.5, linetype='dashed')
-VlnPlot(bri.integrated, features = "GNLY", group.by = "CellTypePranali") + NoLegend() + geom_hline(yintercept = 2, linetype='dashed')
-VlnPlot(bri.integrated, features = "PRF1", group.by = "CellTypePranali") + NoLegend() + geom_hline(yintercept = 0.5, linetype='dashed')
-VlnPlot(bri.integrated, features = "cytotoxic_expression", group.by = "CellTypePranali") + NoLegend() + geom_hline(yintercept = 1.2, linetype='dashed', size = 1.5) + labs(title = "Average Cytotoxic Expression")
+VlnPlot(bri.integrated, features = "NKG7", group.by = "CellType") + NoLegend() + geom_hline(yintercept = 2, linetype='dashed')
+VlnPlot(bri.integrated, features = "GZMA", group.by = "CellType") + NoLegend() + geom_hline(yintercept = 1, linetype='dashed')
+VlnPlot(bri.integrated, features = "GZMB", group.by = "CellType") + NoLegend() + geom_hline(yintercept = 0.5, linetype='dashed')
+VlnPlot(bri.integrated, features = "GNLY", group.by = "CellType") + NoLegend() + geom_hline(yintercept = 2, linetype='dashed')
+VlnPlot(bri.integrated, features = "PRF1", group.by = "CellType") + NoLegend() + geom_hline(yintercept = 0.5, linetype='dashed')
+VlnPlot(bri.integrated, features = "cytotoxic_expression", group.by = "CellType") + NoLegend() + geom_hline(yintercept = 1.2, linetype='dashed', size = 1.5) + labs(title = "Average Cytotoxic Expression")
 VlnPlot(bri.integrated, features = "cytotoxic_expression", group.by = "orig.ident") + NoLegend() + geom_hline(yintercept = 1.2, linetype='dashed') 
 
 # label cytotoxic cells
 bri.integrated$cytotoxic <- ifelse(bri.integrated$cytotoxic_expression > 1.2, "Cytotoxic", "Non-Cytotoxic")
 bri.integrated$cytotoxic_CD4CD8 <- paste(bri.integrated$cytotoxic, bri.integrated$CD4_CD8_status, sep = "_")
-bri.integrated$cytotoxic_clusters <- paste(bri.integrated$cytotoxic, bri.integrated$CellTypePranali, sep = "_")
+bri.integrated$cytotoxic_clusters <- paste(bri.integrated$cytotoxic, bri.integrated$CellType, sep = "_")
 
 table_cyto <- as.matrix(rbind(table(bri.integrated$cytotoxic, bri.integrated$hash.ID)))
 table_cyto <- apply(table_cyto, 1, function(x){
@@ -59,8 +59,8 @@ table_cyto <- apply(table_cyto, 1, function(x){
 
 # all clusters
 bri.integrated_test <- subset(bri.integrated, subset = Tissue == "Skin")
-bri.integrated_test <- bri.integrated_test[,!bri.integrated_test$CellTypePranali %in% c("GD T cells", "CD8+ CD103+ TEMRA")]
-prop.list <- getTransformedProps(clusters = droplevels(bri.integrated_test$CellTypePranali), 
+bri.integrated_test <- bri.integrated_test[,!bri.integrated_test$CellType %in% c("GD T cells", "CD8+ CD103+ TEMRA")]
+prop.list <- getTransformedProps(clusters = droplevels(bri.integrated_test$CellType), 
                                  sample = bri.integrated_test$hash.ID, transform = "asin")
 grp <- data.frame(cbind(bri.integrated_test$phenotype, bri.integrated_test$hash.ID)) %>% distinct()
 rownames(grp) <- grp$X2
@@ -73,7 +73,7 @@ write.xlsx(results, file = "differentialabundance_anova.xlsx", sheetName = "AllC
 bri.integrated_test <- subset(bri.integrated, subset = Tissue == "Skin")
 bri.integrated_test$cytotoxic_CD4CD8 <- ifelse(grepl("CD4|CD8", bri.integrated_test$CD4_CD8_status),
                                                paste(bri.integrated_test$cytotoxic, bri.integrated_test$CD4_CD8_status, sep = "_"),
-                                               as.character(bri.integrated_test$CellTypePranali))
+                                               as.character(bri.integrated_test$CellType))
 bri.integrated_test <- bri.integrated_test[,!bri.integrated_test$cytotoxic_CD4CD8 %in% c("GD T cells")]
 prop.list <- getTransformedProps(clusters = bri.integrated_test$cytotoxic_CD4CD8, 
                                  sample = bri.integrated_test$hash.ID, transform = "asin")
@@ -87,8 +87,8 @@ write.xlsx(results, file = "differentialabundance_anova.xlsx", sheetName = "Cyto
 
 # all clusters
 bri.integrated_test <- subset(bri.integrated, subset = Tissue == "PBMC")
-bri.integrated_test <- bri.integrated_test[,!bri.integrated_test$CellTypePranali %in% c("GD T cells", "CD8+ CD103+ TEMRA")]
-prop.list <- getTransformedProps(clusters = droplevels(bri.integrated_test$CellTypePranali), 
+bri.integrated_test <- bri.integrated_test[,!bri.integrated_test$CellType %in% c("GD T cells", "CD8+ CD103+ TEMRA")]
+prop.list <- getTransformedProps(clusters = droplevels(bri.integrated_test$CellType), 
                                  sample = bri.integrated_test$hash.ID, transform = "asin")
 grp <- data.frame(cbind(bri.integrated_test$phenotype, bri.integrated_test$hash.ID)) %>% distinct()
 rownames(grp) <- grp$X2
@@ -101,7 +101,7 @@ write.xlsx(results, file = "differentialabundance_anova.xlsx", sheetName = "AllC
 bri.integrated_test <- subset(bri.integrated, subset = Tissue == "PBMC")
 bri.integrated_test$cytotoxic_CD4CD8 <- ifelse(grepl("CD4|CD8", bri.integrated_test$CD4_CD8_status),
                                                paste(bri.integrated_test$cytotoxic, bri.integrated_test$CD4_CD8_status, sep = "_"),
-                                               as.character(bri.integrated_test$CellTypePranali))
+                                               as.character(bri.integrated_test$CellType))
 bri.integrated_test <- bri.integrated_test[,!bri.integrated_test$cytotoxic_CD4CD8 %in% c("GD T cells")]
 prop.list <- getTransformedProps(clusters = bri.integrated_test$cytotoxic_CD4CD8, 
                                  sample = bri.integrated_test$hash.ID, transform = "asin")
@@ -124,9 +124,9 @@ comparison <- c("MDE|SJS","Control|MDE","Control|SJS")
 alltest <- list()
 for(i in 1:length(comparison)){
   bri.integrated_test <- subset(bri.integrated, subset = Tissue == "Skin")
-  bri.integrated_test <- bri.integrated_test[,!bri.integrated_test$CellTypePranali %in% c("GD T cells","CD8+ CD103+ TEMRA")]
+  bri.integrated_test <- bri.integrated_test[,!bri.integrated_test$CellType %in% c("GD T cells","CD8+ CD103+ TEMRA")]
   bri.integrated_test <- bri.integrated_test[,grepl(comparison[i], bri.integrated_test$phenotype)]
-  prop.list <- getTransformedProps(clusters = droplevels(bri.integrated_test$CellTypePranali), 
+  prop.list <- getTransformedProps(clusters = droplevels(bri.integrated_test$CellType), 
                                    sample = bri.integrated_test$hash.ID, transform = "asin")
   grp <- data.frame(cbind(bri.integrated_test$phenotype, bri.integrated_test$hash.ID)) %>% distinct()
   rownames(grp) <- grp$X2
@@ -149,7 +149,7 @@ for(i in 1:length(comparison)){
   bri.integrated_test <- bri.integrated_test[,grepl(comparison[i], bri.integrated_test$phenotype)]
   bri.integrated_test$cytotoxic_CD4CD8 <- ifelse(grepl("CD4|CD8", bri.integrated_test$CD4_CD8_status),
                                                  paste(bri.integrated_test$cytotoxic, bri.integrated_test$CD4_CD8_status, sep = "_"),
-                                                 as.character(bri.integrated_test$CellTypePranali))
+                                                 as.character(bri.integrated_test$CellType))
   bri.integrated_test <- bri.integrated_test[,!bri.integrated_test$cytotoxic_CD4CD8 %in% "GD T cells"]
   prop.list <- getTransformedProps(clusters = bri.integrated_test$cytotoxic_CD4CD8, 
                                    sample = bri.integrated_test$hash.ID, transform = "asin")
@@ -174,7 +174,7 @@ for(i in 1:length(comparison)){
   bri.integrated_test <- bri.integrated_test[,grepl(comparison[i], bri.integrated_test$phenotype)]
   bri.integrated_test$cytotoxic_CD4CD8 <- ifelse(grepl("CD4|CD8", bri.integrated_test$CD4_CD8_status),
                                                  paste(bri.integrated_test$cytotoxic, bri.integrated_test$CD4_CD8_status, sep = "_"),
-                                                 as.character(bri.integrated_test$CellTypePranali))
+                                                 as.character(bri.integrated_test$CellType))
   bri.integrated_test <- bri.integrated_test[,!bri.integrated_test$cytotoxic_CD4CD8 %in% "GD T cells"]
   prop.list <- getTransformedProps(clusters = bri.integrated_test$cytotoxic_CD4CD8, 
                                    sample = bri.integrated_test$hash.ID, transform = "asin")

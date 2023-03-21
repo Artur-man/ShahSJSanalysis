@@ -30,7 +30,7 @@ bri.integrated <- bri.integrated[,!bri.integrated$CellType == "Dying Cells (MT++
 ## DE analysis with edgeR Test on bulk level ####
 ####
 
-allcelltypes <- unique(bri.integrated$CellTypePranali)
+allcelltypes <- unique(bri.integrated$CellType)
 allcelltypes <- allcelltypes[!allcelltypes %in% c("GD T cells", "Dead", "Proliferating")]
 
 # tissue
@@ -41,7 +41,7 @@ for(tis in c("Skin","PBMC")){
   for(celltype in allcelltypes){
     
     # select subset for tissue and cell type
-    bri.integrated_subset <- bri.integrated[,bri.integrated$CellTypePranali == celltype & bri.integrated$Tissue == tis]
+    bri.integrated_subset <- bri.integrated[,bri.integrated$CellType == celltype & bri.integrated$Tissue == tis]
     bri.integrated_subset <- AggregateExpression(bri.integrated_subset, assays = "RNA", slot = "counts", group.by = "hash.ID")
     bri.integrated_subset_rna <- bri.integrated_subset$RNA
     
@@ -99,7 +99,7 @@ write.table(all_results, file = "revision_files_17122022/DEResults_BulkedgeR.tsv
 ## DE analysis with edgeR Test on bulk level on ADT ####
 ####
 
-allcelltypes <- unique(bri.integrated$CellTypePranali)
+allcelltypes <- unique(bri.integrated$CellType)
 allcelltypes <- allcelltypes[!allcelltypes %in% c("GD T cells", "Dead", "Proliferating")]
 
 # tissue
@@ -110,7 +110,7 @@ for(tis in c("Skin","PBMC")){
   for(celltype in allcelltypes){
     
     # select subset for tissue and cell type
-    bri.integrated_subset <- bri.integrated[,bri.integrated$CellTypePranali == celltype & bri.integrated$Tissue == tis]
+    bri.integrated_subset <- bri.integrated[,bri.integrated$CellType == celltype & bri.integrated$Tissue == tis]
     bri.integrated_subset <- AggregateExpression(bri.integrated_subset, assays = "ADT", slot = "counts", group.by = "hash.ID")
     bri.integrated_subset_adt <- bri.integrated_subset$ADT
     
@@ -169,9 +169,9 @@ write.table(all_results, file = "revision_files_17122022/DEResults_BulkedgeR_ADT
 ## DE analysis with edgeR Test on bulk level on combined Treg CD4 and CD8 ####
 ####
 
-bri.integrated$CD4_CD8_Treg <- ifelse(grepl("Treg",bri.integrated$CellTypePranali), "Treg", 
-                                      ifelse(grepl("CD4",bri.integrated$CellTypePranali), "CD4", 
-                                             ifelse(grepl("CD8",bri.integrated$CellTypePranali), "CD8", as.character(bri.integrated$CellTypePranali))))
+bri.integrated$CD4_CD8_Treg <- ifelse(grepl("Treg",bri.integrated$CellType), "Treg", 
+                                      ifelse(grepl("CD4",bri.integrated$CellType), "CD4", 
+                                             ifelse(grepl("CD8",bri.integrated$CellType), "CD8", as.character(bri.integrated$CellType))))
 allcelltypes <- unique(bri.integrated$CD4_CD8_Treg)
 allcelltypes <- allcelltypes[!allcelltypes %in% c("GD T cells", "Dead", "Proliferating")]
 
