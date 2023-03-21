@@ -52,6 +52,39 @@ bri.integrated <- RenameIdents(object = bri.integrated,
                                   "13" = "CD8+ CD103- TRM (nf)")
 bri.integrated$CellType <- Idents(bri.integrated)
 
+# Cell Types
+Idents(bri.integrated) <- "seurat_clusters"
+bri.integrated <- RenameIdents(object = bri.integrated,
+                               "032_0" = "CD4",
+                               "032_1" = "CD4",
+                               "032_2" = "CD4",
+                               "032_3" = "CD4",
+                               "032_4" = "CD8",
+                               "032_5" = "CD4",
+                               "1_0" = "CD8",
+                               "1_1_0" = "CD8", 
+                               "1_1_1" = "CD8",
+                               "1_1_2" = "CD8",
+                               "1_2" = "CD8", 
+                               "1_3" = "CD8",
+                               "4" = "CD4+ Treg 2",   
+                               "5" = "CD8",         
+                               "6" = "CD4",
+                               "7" = "CD8",            
+                               "8_1" = "GD T cells",
+                               "8_0" = "CD8",
+                               "8_2" = "CD8",
+                               "8_3" = "CD8",
+                               "9_0" = "CD4",
+                               "9_1" = "CD8",
+                               "9_2" = "CD4", 
+                               "9_3" = "CD8", 
+                               "10" = "CD4+ Treg 1",
+                               "11" = "Proliferating",
+                               "12" = "Dead",
+                               "13" = "CD8")
+bri.integrated$CD4_CD8_status <- Idents(bri.integrated)
+
 # save
 saveRDS(bri.integrated, "sjs_clustered_tcr_annotated.rds")
 
