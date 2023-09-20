@@ -1,19 +1,19 @@
 # libraries 
 library(Seurat)
 library(tidyverse)
-library(anndata)
+library(patchwork)
 
 ####
 ## import Data #####
 #### 
-bri.integrated <- readRDS("sjs_clustered_tcr.rds")
-load("sjs_clustered_tcr_subclusters.Rdata")
+bri.integrated <- readRDS("2-multimodal-sjs-clustered-tcr.rds")
+load("3-multimodal-sjs-clustered-tcr-subclusters.Rdata")
 
 # import subclusters
 bri.integrated$seurat_clusters <- as.character(bri.integrated$wsnn_res.0.6)
 bri.integrated$seurat_clusters[bri.integrated$seurat_clusters==1] <- paste(1,bri.integrated_cluster1$sub.cluster, sep = "_")
 bri.integrated$seurat_clusters[bri.integrated$seurat_clusters==9] <- paste(9,bri.integrated_cluster9$wsnn_res.0.8, sep = "_")
-bri.integrated$seurat_clusters[bri.integrated$seurat_clusters %in% c(0,3,2)] <- paste("032",bri.integrated_cluster0$wsnn_res.0.4, sep = "_")
+bri.integrated$seurat_clusters[bri.integrated$seurat_clusters %in% c(0,3,2)] <- paste("032",bri.integrated_cluster0$wsnn_res.0.6, sep = "_")
 bri.integrated$seurat_clusters[bri.integrated$seurat_clusters==8] <- paste(8,bri.integrated_cluster8$wsnn_res.0.4, sep = "_")
 
 # Delete a small artifact cluster with only 2 cells
@@ -85,6 +85,6 @@ bri.integrated <- RenameIdents(object = bri.integrated,
                                "13" = "CD8")
 bri.integrated$CD4_CD8_status <- Idents(bri.integrated)
 
-# save
-saveRDS(bri.integrated, "sjs_clustered_tcr_annotated.rds")
+# save final RDS, which is annotated, and used for downstream analyses.
+saveRDS(bri.integrated, "final-multimodal-sjs-clustered-tcr-annotated.rds")
 

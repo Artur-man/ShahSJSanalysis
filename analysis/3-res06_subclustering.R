@@ -1,11 +1,13 @@
 # libraries 
 library(Seurat)
 library(tidyverse)
+library(patchwork)
 
-# import 
-bri.integrated <- readRDS("sjs_clustered_tcr.rds")
+# Perform analysis of various cluster resolutions
+# pull data from the previous script (multimodal analysis, clustered, with TCR data)
+bri.integrated <- readRDS("2-multimodal-sjs-clustered-tcr.rds")
 
-## SubCluster 0,3,2 of res 0.6 ####
+## Using resolution 0.6, we combined cluster 0, cluster 3, and cluster 2 and then sub-clustered the resulting combination for annotation####
 
 bri.integrated_cluster0 <- subset(bri.integrated, subset = (wsnn_res.0.6 %in% c(0,2,3)))
 DefaultAssay(bri.integrated_cluster0) <- "integratedRNA"
@@ -78,7 +80,7 @@ for(i in 1:length(idents)){
   top_adtmarkers[[idents[i]]] <- adtmarkers[[idents[i]]] %>% group_by(cluster) %>% slice_max(avg_log2FC, n = 12)
 }
 
-## SubCluster 1 of res 0.6 ####
+## We subclustered cluster 1 of res 0.6 for annotation####
 
 ## split and filter ####
 bri.integrated_cluster1 <- subset(bri.integrated, subset = (wsnn_res.0.6 == "1"))
@@ -124,12 +126,6 @@ p8 <- DimPlot(bri.integrated_cluster1, reduction = 'wnn.umap', label = TRUE, rep
 p1 + p2 + p3 + p4
 p5 + p6 + p7 + p8
 
-high_clones_skin <- WhichCells(bri.integrated_cluster1, 
-                               cells = rownames(bri.integrated_cluster1@meta.data[bri.integrated_cluster1$clonotype_id=="clonotype1_SJS001" & bri.integrated_cluster1$Tissue=="Skin",]))
-DimPlot(bri.integrated_cluster1, label=T, reduction="wnn.umap", label.size = 5, sizes.highlight = 3, 
-        group.by="wsnn_res.0.6", cells.highlight= list(`clonotype1_SJS001` = high_clones_skin), 
-        cols.highlight = c("darkgreen")) + 
-  labs(title = "clonotype1_SJS001")
 
 DefaultAssay(bri.integrated_cluster1) <- "integratedRNA"
 features_RNA_CD8 <- c("IFNG", "NKG7", "GNLY", "GZMA","GZMB", "GZMH", "GZMK")
@@ -159,7 +155,15 @@ for(i in 1:length(idents)){
   top_adtmarkers[[idents[i]]] <- adtmarkers[[idents[i]]] %>% group_by(cluster) %>% slice_max(avg_log2FC, n = 12)
 }
 
-## SubCluster 9 of res 0.6 ####
+
+## Cluster 1 (of res0.6 from original cluster) and use res 0.4
+Idents(bri.integrated_cluster1) <- "wsnn_res.0.4"
+bri.integrated_cluster1 <- FindSubCluster(bri.integrated_cluster1, 
+                                          cluster = 1, resolution = 0.5, graph.name = "wsnn")
+Idents(bri.integrated_cluster1) <- "sub.cluster"
+DimPlot(bri.integrated_cluster1, reduction = "wnn.umap", label = TRUE)
+
+## We subclustered cluster 9 of res 0.6 for annotation ####
 
 ## split and filter ####
 bri.integrated_cluster9 <- subset(bri.integrated, subset = (wsnn_res.0.6 == "9"))
@@ -229,11 +233,10 @@ for(i in 1:length(idents)){
   top_adtmarkers[[idents[i]]] <- adtmarkers[[idents[i]]] %>% group_by(cluster) %>% slice_max(avg_log2FC, n = 12)
 }
 
-## SubCluster 8 of res 0.6 ####
+## We subclustered cluster 8 of res 0.6 for annotation ####
 
 ## split and filter ####
 bri.integrated_cluster8 <- subset(bri.integrated, subset = (wsnn_res.0.6 == "8"))
-DefaultAssay(bri.integrated_cluster8) <- "integratedRNA"
 
 ## scale and pca ####
 DefaultAssay(bri.integrated_cluster8) <- "integratedRNA"
@@ -300,6 +303,6 @@ for(i in 1:length(idents)){
 }
 
 ## Save all subclusterings ####
-save(bri.integrated_cluster0, bri.integrated_cluster1, bri.integrated_cluster9, bri.integrated_cluster8, file = "sjs_clustered_tcr_subclusters.Rdata")
+save(bri.integrated_cluster0, bri.integrated_cluster1, bri.integrated_cluster9, bri.integrated_cluster8, file = "3-multimodal-sjs-clustered-tcr-subclusters.Rdata")
 
 

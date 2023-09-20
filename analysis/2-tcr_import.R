@@ -4,14 +4,15 @@ library(djvdj)
 library(patchwork)
 library(tidyverse)
 
-# pull data
-integrated_all <- readRDS("sjs_clustered.rds")
+# attach TCR data to the object
+# pull data from the previous script (multimodal analysis, clustered)
+integrated_all <- readRDS("1-multimodal-sjs-clustered.rds")
 integrated_all_split <- SplitObject(integrated_all, split.by = "HTO_classification")
 
-# tcr paths
-path_795 <- c("../Data/Wei_Data/BRI-793-Wei/vdj/")
-path_819 <- c("../Data/Wei_Data/BRI-817-Wei/vdj/")
-path_822 <- c("../Data/Wei_Data/BRI-820-Wei/vdj/")
+# Paths to Cellranger vdj outputs
+path_795 <- c("BRI-793-/vdj/")
+path_819 <- c("BRI-817/vdj/")
+path_822 <- c("BRI-820/vdj/")
 
 # names
 BRI793_names <- c("Control-BCH-048-PBMC","MDE-006-PBMC","Control-BCH-001-PBMC","MDE-006-Skin","Control-039-Skin")
@@ -41,7 +42,7 @@ for(i in 1:length(integrated_all_split)){
   path = names_data[names_data$Sample==names_samples[i],2]
   label = names_data[names_data$Sample==names_samples[i],3]
   seu <- import_vdj(
-    sobj_in = seu,                       # Seurat object
+    input = seu,                       # Seurat object
     vdj_dir = path                       # Cellranger output directories
   )
 
@@ -58,5 +59,5 @@ integrated_all_merged_new <- integrated_all
 integrated_all_merged_new@meta.data <- metadata
 
 # save rds
-saveRDS(integrated_all_merged_new, "sjs_clustered_tcr.rds")
+saveRDS(integrated_all_merged_new, "2-multimodal-sjs-clustered-tcr.rds")
 

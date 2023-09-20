@@ -1,23 +1,20 @@
 # libraries
 library(Seurat)
-library(ggplot2)
 library(patchwork)
 library(tidyverse)
 library(anndata)
 library(scales)
-library(ggsci) # palatte for NEJM
 library(circlize)
 library(reshape2)
 library(xlsx)
 library(speckle)
 library(edgeR)
-library(xlsx)
 
 ####
 ## Import and Configure Data #####
 ####
 
-bri.integrated <- readRDS("sjs_clustered_tcr_annotated.rds")
+bri.integrated <- readRDS("final-multimodal-sjs-clustered-tcr-annotated.rds")
 bri.integrated$phenotype <- sapply(bri.integrated$phenotypeTissue, function(x) return(strsplit(x, split = "_")[[1]][1]))
 bri.integrated$phenotype <- gsub("BCH","Control", bri.integrated$phenotype)
 bri.integrated <- bri.integrated[,!bri.integrated$CellType == "Dying Cells (MT++)"]

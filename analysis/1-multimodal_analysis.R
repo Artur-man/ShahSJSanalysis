@@ -1,19 +1,19 @@
 library(tidyverse)
 library(Seurat)
 library(patchwork)
-library(ggplot2)
 
 #### 
 ## Data Import ##############
 ####
 
-# # read cellranger 10x filtered feature matrices 
-bri793 <- Read10X(data.dir="BRI-793-Wei/cite/filtered_feature_bc_matrix/")
-bri793hash <- Read10X(data.dir="BRI-793-Wei/hash/filtered_feature_bc_matrix/")
-bri817 <- Read10X(data.dir="BRI-817-Wei/cite/filtered_feature_bc_matrix/")
-bri817hash <- Read10X(data.dir="BRI-817-Wei/hash/filtered_feature_bc_matrix/")
-bri820 <- Read10X(data.dir="BRI-820-Wei/cite/filtered_feature_bc_matrix/")
-bri820hash <- Read10X(data.dir="BRI-820-Wei/hash/filtered_feature_bc_matrix/")
+# # read cellranger 10x filtered feature matrices
+# # the filtered barcode matrices of 3 sequencing flowcells, which combine gene expression and antibody derived tags / hashtags (6 total barcode matrices)
+bri793 <- Read10X(data.dir="BRI-793-/cite/filtered_feature_bc_matrix/")
+bri793hash <- Read10X(data.dir="BRI-793-/hash/filtered_feature_bc_matrix/")
+bri817 <- Read10X(data.dir="BRI-817-/cite/filtered_feature_bc_matrix/")
+bri817hash <- Read10X(data.dir="BRI-817-/hash/filtered_feature_bc_matrix/")
+bri820 <- Read10X(data.dir="BRI-820-/cite/filtered_feature_bc_matrix/")
+bri820hash <- Read10X(data.dir="BRI-820/hash/filtered_feature_bc_matrix/")
 
 # appoint ADT, HTO and GEX to Seurat objects
 bri793.joint.bcs <- intersect(colnames(bri793[["Antibody Capture"]]),colnames(bri793hash[["Antibody Capture"]]))
@@ -35,7 +35,7 @@ bri820.obj[["ADT"]] <- CreateAssayObject(bri820[["Antibody Capture"]][, bri820.j
 ## HTO Analysis ###########
 ####
 
-# Normalize HTO with central log transformation, use 99th quantile for cutoff
+# Normalize HTO with central log ratio transformation, use 99th quantile for cutoff
 bri793.obj <- NormalizeData(bri793.obj, assay = "HTO", normalization.method = "CLR")
 bri793.obj <- HTODemux(bri793.obj, assay = "HTO", positive.quantile = 0.99)
 bri817.obj <- NormalizeData(bri817.obj, assay = "HTO", normalization.method = "CLR")
@@ -78,9 +78,9 @@ bri.list <- do.call(c, list(bri793.list,bri817.list,bri820.list))
 
 ####
 ## Filter and Process RNA #######
-# Filtering RNA and ADT, Normalize, Find variable features
+# Filtering RNA and ADT counts, Normalize, Find variable features
 # low RNA 1000, high RNA 20000, 20% percent.mt
-# Remove ribosomal proteins (RPS and RPL) 
+# Remove ribosomal RNA transcripts (RPS and RPL) 
 ####
 
 bri.list <- do.call(c, list(bri793.list,bri817.list,bri820.list))
@@ -217,10 +217,7 @@ p1 + p2 + p3 + p4
 p5 + p6 + p7 + p8
 
 ## save bri.integrated to a rds file ####
-saveRDS(bri.integrated, "sjs_clustered.rds")
-
-
-
+saveRDS(bri.integrated, "1-multimodal-sjs-clustered.rds")
 
 
 
