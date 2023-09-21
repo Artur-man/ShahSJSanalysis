@@ -2,7 +2,6 @@ library(Seurat)
 library(tidyverse)
 library(RcppHungarian)
 source('plot_violin_seurat.R')
-source('plot_tcr_violin_seurat.R')
 
 bri.integrated <- readRDS("final-multimodal-sjs-clustered-tcr-annotated.rds")
 DefaultAssay(bri.integrated) <- "RNA"
@@ -198,7 +197,6 @@ plot_violin_seurat(bri.integrated.ifng.skin, gene='IFNG', color_by = 'CellType',
                    legend_text_size = 8, facet_text_size = 10, number_label_text_size = 3)
 
 #### Figure 4 ####
-# Fig 4A, B Clonal frequency
 
 
 
@@ -382,70 +380,5 @@ plot_violin_seurat(bri.integrated.sub.skin, gene=plotgene, color_by = 'CellType'
                    colors = c('#00f5ff','#fa8072','#ffdf00','#008b00','#ff0800','#858585','#ff1dce'),
                    title_size = 20, axis_title_size = 15, axis_text_size = 5, legend_title_size = 10, 
                    legend_text_size = 8, facet_text_size = 10, number_label_text_size = 4)
-
-#### Supp Fig 8 - Clonal frequency in healthy skin ####
-
-
-
-
-
-
-
-
-
-
-
-
-### SUPP fig, which one for violin plots? Do we still supply it?
-
-# GNLY and GZMB for SKIN for each individual patient SJS123, MDE123, HC1,2
-#cd8+cd103-temra; cd8+cd103+temra;cd8+teff;cd8+tem;cd8+cd103+cd69+trm;cd8+cd103-cd69+trm;cd8+cd56+tcell
-plotgene <- 'GNLY'
-plot_violin_seurat(bri.integrated.sub.skin, gene=plotgene, color_by = 'CellType',
-                   facet_by = 'hash.ID', sig = 2,
-                   facet_order = c('SJS001SKIN','SJS002SKIN','SJS003SKIN','MDE001SKIN','MDE002SKIN','MDE-006-Skin','Control031Skin','Control-039-Skin'),
-                   colors = c('#00f5ff','#fa8072','#ffdf00','#008b00','#ff0800','#858585','#ff1dce'),
-                   title_size = 20, axis_title_size = 15, axis_text_size = 5, legend_title_size = 10, 
-                   legend_text_size = 8, facet_text_size = 10, number_label_text_size = 4)
-
-
-
-
-
-
-
-# RNA, ADT, WNN umaps
-DimPlot(bri.integrated, group.by = "wsnn_res.0.6", reduction = "rnaintegrated.umap", label = TRUE, label.box = TRUE, repel = FALSE) + NoLegend()
-DimPlot(bri.integrated, group.by = "wsnn_res.0.6", reduction = "adtintegrated.umap", label = TRUE, label.box = TRUE) + NoLegend()
-DimPlot(bri.integrated, group.by = "CellType", reduction = "wnn.umap", label = TRUE, label.box = TRUE) + NoLegend()
-
-DimPlot(bri.integrated, group.by = "CellType", reduction = "rnaintegrated.umap", label = TRUE, label.box = TRUE, repel = TRUE) + NoLegend()
-DimPlot(bri.integrated, group.by = "CellType", reduction = "adtintegrated.umap", label = TRUE, label.box = TRUE) + NoLegend()
-DimPlot(bri.integrated, group.by = "CellType", reduction = "wnn.umap", label = TRUE, label.box = TRUE) + NoLegend()
-
-DimPlot(bri.integrated, group.by = "CellTypeNumber", reduction = "wnn.umap", label = TRUE, label.box = TRUE) + NoLegend()
-
-#by hashID (all), and by individual samples
-DimPlot(subset(bri.integrated, subset= Tissue=="PBMC"), group.by = "CellType", pt.size = .5, label = TRUE, label.size = 8, repel = TRUE) + ggtitle("All Blood") + NoLegend()
-DimPlot(subset(bri.integrated, subset= Tissue=="Skin"), group.by = "CellType", pt.size = .5, label = TRUE, label.size = 8, repel = TRUE) + ggtitle("All Skin") + NoLegend()
-
-DimPlot(subset(bri.integrated, subset= hash.ID=="BCH026PBMC"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("BCH026PBMC") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="Control-039-Skin"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("Control-039-Skin") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="Control-BCH-001-PBMC"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("Control-BCH-001-PBMC") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="Control-BCH-048-PBMC"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("Control-BCH-048-PBMC") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="Control031Skin"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("Control031Skin") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="MDE-006-PBMC"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("MDE-006-PBMC") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="MDE-006-Skin"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("MDE-006-Skin") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="MDE001PBMC"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("MDE001PBMC") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="MDE001SKIN"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("MDE001SKIN") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="MDE002PBMC"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("MDE002PBMC") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="MDE002SKIN"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("MDE002SKIN") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="SJS001PBMC"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("SJS001PBMC") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="SJS001SKIN"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("SJS001SKIN") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="SJS002PBMC"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("SJS002PBMC") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="SJS002SKIN"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("SJS002SKIN") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="SJS003PBMC"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE,) + ggtitle("SJS003PBMC") + NoLegend()
-DimPlot(subset(bri.integrated, subset= hash.ID=="SJS003SKIN"), group.by = "CellType", pt.size = 1.5, label = TRUE, label.size = 5, repel = TRUE, label.box = TRUE) + ggtitle("SJS003SKIN") + NoLegend()
-
 
 
