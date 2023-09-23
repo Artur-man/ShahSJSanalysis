@@ -2,7 +2,6 @@
 library(tidyverse)
 library(Seurat)
 library(patchwork)
-library(ggplot2)
 library(DESeq2)
 library(debrowser)
 library(vsn)
@@ -11,13 +10,14 @@ library(vsn)
 ## Data Import ##############
 ####
 
-# # read cellranger 10x filtered feature matrices 
-bri793 <- Read10X(data.dir="BRI-793-Wei/cite/filtered_feature_bc_matrix/")
-bri793hash <- Read10X(data.dir="BRI-793-Wei/hash/filtered_feature_bc_matrix/")
-bri817 <- Read10X(data.dir="BRI-817-Wei/cite/filtered_feature_bc_matrix/")
-bri817hash <- Read10X(data.dir="BRI-817-Wei/hash/filtered_feature_bc_matrix/")
-bri820 <- Read10X(data.dir="BRI-820-Wei/cite/filtered_feature_bc_matrix/")
-bri820hash <- Read10X(data.dir="BRI-820-Wei/hash/filtered_feature_bc_matrix/")
+# # read cellranger 10x filtered feature matrices
+# # the filtered barcode matrices of 3 sequencing flowcells, which combine gene expression and antibody derived tags / hashtags (6 total barcode matrices)
+bri793 <- Read10X(data.dir="BRI-793/cite/filtered_feature_bc_matrix/")
+bri793hash <- Read10X(data.dir="BRI-793/hash/filtered_feature_bc_matrix/")
+bri817 <- Read10X(data.dir="BRI-817/cite/filtered_feature_bc_matrix/")
+bri817hash <- Read10X(data.dir="BRI-817/hash/filtered_feature_bc_matrix/")
+bri820 <- Read10X(data.dir="BRI-820/cite/filtered_feature_bc_matrix/")
+bri820hash <- Read10X(data.dir="BRI-820/hash/filtered_feature_bc_matrix/")
 
 # appoint ADT, HTO and GEX to Seurat objects
 bri793.joint.bcs <- intersect(colnames(bri793[["Antibody Capture"]]),colnames(bri793hash[["Antibody Capture"]]))
