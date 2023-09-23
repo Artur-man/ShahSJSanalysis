@@ -309,15 +309,20 @@ p5 + p6 + p7 + p8
 
 
 # # remove NA and dead cells
-bri.integrated.skin <- subset(bri.integrated.skin, subset = CellTypePranali != "NA")
-bri.integrated.skin <- subset(bri.integrated.skin, subset = CellTypePranali != "Dead")
-bri.integrated.pbmc <- subset(bri.integrated.pbmc, subset = CellTypePranali != "NA")
-bri.integrated.pbmc <- subset(bri.integrated.pbmc, subset = CellTypePranali != "Dead")
+bri.integrated.skin <- subset(bri.integrated.skin, subset = CellType != "NA")
+bri.integrated.skin <- subset(bri.integrated.skin, subset = CellType != "Dead")
+bri.integrated.pbmc <- subset(bri.integrated.pbmc, subset = CellType != "NA")
+bri.integrated.pbmc <- subset(bri.integrated.pbmc, subset = CellType != "Dead")
 bri.integrated.pbmc <- bri.integrated.pbmc[,bri.integrated.pbmc$wsnn_res.1.6 != "11"]
+
+#name clusters in independently clustered skin and blood
+#SC - skin cluster; BC - blood cluster
+bri.integrated.skin$Skinclusters <- paste('SC',bri.integrated.skin$wsnn_res.1.6, sep = '_')
+bri.integrated.pbmc$PBMCclusters <- paste('BC',bri.integrated.pbmc$wsnn_res.1.6, sep = '_')
 
 # save RDS files for independently clustered skin and blood
 saveRDS(bri.integrated.skin, "8-multimodal-sjs-skin-only.rds")
-saveRDS(bri.integrated.pbmc_nonmt, "8-multimodal-sjs-pbmc-only.rds")
+saveRDS(bri.integrated.pbmc, "8-multimodal-sjs-pbmc-only.rds")
 
 
 

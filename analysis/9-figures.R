@@ -60,18 +60,15 @@ DimPlot(bri.integrated, label=F, reduction="wnn.umap", label.size = 5, sizes.hig
 #heatmap of markers to define clusters
 
 Idents(bri.integrated) <- "CellType"
-features_all <- c("CD8","CD8A","CD4.1","CD4", "CD45RA","CD45RO",
-                  "CD69.1", "CD69", "CD103", "ITGAE", "KLF2", "S1PR1", "CD62L", "SELL", "CCR7.1", "CCR7", "IL-7Ra","IL7R", 
-                  "CD56",'NCAM1',"IFNG","GNLY", 'GZMA', 'GZMB', 'PRF1', 'NKG7', "CX3CR1",
-                  "TRDV2", "TRGV10",
-                  "FAS.1","FAS", 'IL10', 'FOXP3', 'CTLA4', 'IL2RA',
-                  "TUBA1B","STMN1")
 
-features_RNA <- c('CD8A','CD4','NCAM1','ITGAE','SELL','CD69',"S1PR1", "TRDV2", "TRGV10", "KLF2",
-                  "IFNG","GNLY", 'GZMA', 'GZMB', 'PRF1', 'NKG7', "FAS",
-                  'IL10', 'FOXP3', 'CTLA4', 'IL2RA',"GATA3","IL17A","KLRG1","B3GAT1","CX3CR1", "CCR7","IL7R", "NCR1", "LAMP1","TUBA1B","STMN1")
+features_all <- c("CD8","CD4.1","TRDV2","CD45RA","CD45RO","IL-7Ra","S1PR1","KLF2","CD62L","CCR7",
+                  "CD103","CD69.1","CX3CR1","CD56","FAS.1","IFNG","GNLY","GZMA","GZMB","PRF1","NKG7",
+                  "FOXP3","CTLA4","IL2RA","TUBA1B","STMN1")
 
-features_ADT <- c("CD8","CD4.1","CD45RA","CD45RO","IL-7Ra","CD103",'CD62L', "CD69.1","CD56","FAS.1","CCR7.1", "CD335","LAMP-1")
+features_RNA <- c("TRDV2","S1PR1","KLF2","CCR7","CX3CR1","IFNG","GNLY","GZMA","GZMB","PRF1","NKG7",
+                  "FOXP3","CTLA4","IL2RA","TUBA1B","STMN1")
+
+features_ADT <- c("CD8","CD4.1","CD45RA","CD45RO","IL-7Ra","CD103","CD69.1",'CD62L',"CD56","FAS.1")
 
 mean_ADT <- AverageExpression(bri.integrated, assays = "ADT", features = features_ADT)
 mean_ADT_scaled <- apply(mean_ADT$ADT, 1, scale)
@@ -91,17 +88,16 @@ label_order <- c("CD8+ Naive","CD8+ TCM","CD8+ TMM","CD8+ CD103- CD69+ TRM (nf)"
 
 mean_all <- cbind(as.data.frame(mean_ADT_scaled), as.data.frame(mean_RNA_scaled))
 mean_all <- mean_all[,features_all]
-colnames(mean_all) <- features_all <- c("CD8 (ADT)","CD8A (RNA)","CD4.1 (ADT)","CD4 (RNA)", "CD45RA (ADT)","CD45RO (ADT)",
-                                        "CD69.1 (ADT)", "CD69 (RNA)", "CD103 (ADT)", "ITGAE (RNA)", "KLF2", "S1PR1", "CD62L (ADT)", "SELL (RNA)", "CCR7.1 (ADT)", "CCR7 (RNA)", "IL-7Ra (ADT)","IL7R (RNA)", 
-                                        "CD56 (ADT)",'NCAM1 (RNA)',"IFNG","GNLY", 'GZMA', 'GZMB', 'PRF1', 'NKG7', "CX3CR1",
-                                        "TRDV2", "TRGV10",
-                                        "FAS.1 (ADT)","FAS (RNA)", 'IL10', 'FOXP3', 'CTLA4', 'IL2RA',
-                                        "TUBA1B","STMN1")
+colnames(mean_all) <- features_all <- c("CD8 (ADT)","CD4 (ADT)",'TRDV2 (RNA)',"CD45RA (ADT)","CD45RO (ADT)", 'IL7RA (ADT)',
+                                        'S1PR1 (RNA)','KLF2 (RNA)','CD62L (ADT)','CCR7 (RNA)','CD103 (ADT)','CD69 (ADT)',
+                                        'CX3CR1 (RNA)','CD56 (ADT)','FAS (ADT)','IFNG (RNA)','GNLY (RNA)','GZMA (RNA)',
+                                        'GZMB (RNA)','PRF1 (RNA)','NKG7 (RNA)','FOXP3 (RNA)','CTLA4 (RNA)','IL2RA (RNA)',
+                                        'TUBA1B (RNA)','STMN1 (RNA)')
 Integrated.Heatmap <- Heatmap(mean_all[label_order,], show_row_dend = FALSE, show_column_dend = FALSE,
                               row_names_side = "left", column_names_side = "top",
                               column_names_rot = 45, cluster_columns = FALSE, cluster_rows = FALSE,
                               column_names_gp = grid::gpar(fontsize = 8), row_names_gp = grid::gpar(fontsize = 8), column_title_gp = grid::gpar(fontsize = 10),
-                              column_split = rep(c("A","B","C","D","E","F"),c(6,12,9,2,6,2)), #change numbers to match number of features
+                              # column_split = rep(c("A","B","C","D","E","F"),c(6,12,9,2,6,2)), #change numbers to match number of features
                               column_title = "Average Expression of Cell Type Markers on Integrated PBMC and Skin cells",
                               heatmap_legend_param = list(title = ""), show_heatmap_legend = FALSE)
 Integrated.Heatmap <- draw(Integrated.Heatmap, padding = unit(c(2, 2, 2, 6), "mm")) # add space for titles
@@ -109,11 +105,6 @@ Integrated.Heatmap <- draw(Integrated.Heatmap, padding = unit(c(2, 2, 2, 6), "mm
 # pdf('fig2B.pdf', width=pdfwidth, height=pdfheight)
 # Integrated.Heatmap
 # dev.off()
-
-
-#2C and D TCR Analysis
-
-
 
 
 #### Figure 3 ####
@@ -144,7 +135,7 @@ plot_violin_seurat(bri.integrated.sub.skin, gene=plotgene, color_by = 'CellType'
 bri.integrated.treg <- subset(bri.integrated, subset= CellType %in% c('CD4+ Treg 1', 'CD4+ Treg 2'))
 bri.integrated.treg
 
-# Assigng tissue type, specifically which type of PBMC or Skin
+# Assign tissue type, specifically which type of PBMC or Skin
 # care with the names - is case sensitive
 diseaseType <- bri.integrated.treg@meta.data$phenotypeTissue
 diseaseType[grepl('SJS',diseaseType)] <- 'SJS'
@@ -196,29 +187,6 @@ plot_violin_seurat(bri.integrated.ifng.skin, gene='IFNG', color_by = 'CellType',
                    title_size = 20, axis_title_size = 15, axis_text_size = 12, legend_title_size = 10, 
                    legend_text_size = 8, facet_text_size = 10, number_label_text_size = 3)
 
-#### Figure 4 ####
-
-
-
-# Fig 4C Non-expanded clone vs top expanded clone (skin TRM phenotype) in SJS patient 1
-bri.integrated.sjs1skin <- subset(bri.integrated, subset = hash.ID=='SJS001SKIN')
-
-plot_tcr_violin_seurat(bri.integrated.sjs1skin, gene = 'GNLY', clone = 'clonotype1_SJS001', threshold = 1, facet_by = c('CellTypeSuperCluster'), log_scale = F)
-
-
-plot_tcr_violin_seurat(subset(bri.integrated, subset= (hash.ID=="SJS001PBMC"|hash.ID=="SJS001SKIN")), 
-                       gene = "GNLY", clone = "clonotype1_SJS001", threshold=1, facet_by = c("CellTypeSuperCluster","hash.ID"), log_scale = F) +
-  plot_tcr_violin_seurat(subset(bri.integrated, subset= (hash.ID=="SJS001PBMC"|hash.ID=="SJS001SKIN")), 
-                         gene = "NKG7", clone = "clonotype1_SJS001", threshold=1, facet_by = c("CellTypeSuperCluster","hash.ID"), log_scale = F) +
-  plot_tcr_violin_seurat(subset(bri.integrated, subset= (hash.ID=="SJS001PBMC"|hash.ID=="SJS001SKIN")), 
-                         gene = "IFNG", clone = "clonotype1_SJS001", threshold=1, facet_by = c("CellTypeSuperCluster","hash.ID"), log_scale = F) +
-  plot_tcr_violin_seurat(subset(bri.integrated, subset= (hash.ID=="SJS001PBMC"|hash.ID=="SJS001SKIN")), 
-                         gene = "KLRD1", clone = "clonotype1_SJS001", threshold=1, facet_by = c("CellTypeSuperCluster","hash.ID"), log_scale = F) +
-  plot_tcr_violin_seurat(subset(bri.integrated, subset= (hash.ID=="SJS001PBMC"|hash.ID=="SJS001SKIN")), 
-                         gene = "CD8B", clone = "clonotype1_SJS001", threshold=1, facet_by = c("CellTypeSuperCluster","hash.ID"), log_scale = F) +
-  plot_tcr_violin_seurat(subset(bri.integrated, subset= (hash.ID=="SJS001PBMC"|hash.ID=="SJS001SKIN")), 
-                         gene = "adt_CD8", clone = "clonotype1_SJS001", threshold=1, facet_by = c("CellTypeSuperCluster","hash.ID"), log_scale = F)
-
 
 
 #### Supplemental Files ####
@@ -249,7 +217,7 @@ p2c
 
 
 #### Supp Fig 5 - skin/blood ####
-DimPlot(bri.integrated, group.by = 'Tissue', cols=c('red','blue'), order = c('PBMC','Skin'), label = F) + NoAxes() + ggtitle('All samples') 
+DimPlot(bri.integrated, group.by = 'Tissue', pt.size = 0.5, cols=c('red','blue'), order = c('PBMC','Skin'), label = F) + NoAxes() + ggtitle('All samples') 
 
 DimPlot(subset(bri.integrated, subset= hash.ID %in% c('SJS001SKIN','SJS001PBMC')), group.by = 'Tissue', cols=c('red','blue'), order = c('Skin','PBMC'), label = F) + NoAxes() + ggtitle("SJS001")
 DimPlot(subset(bri.integrated, subset= hash.ID %in% c('SJS002SKIN','SJS002PBMC')), group.by = 'Tissue', cols=c('red','blue'), order = c('Skin','PBMC'), label = F) + NoAxes() + ggtitle("SJS002")
@@ -287,13 +255,15 @@ DimPlot(subset(bri.integrated, subset= hash.ID=="SJS003SKIN"), pt.size = 2, cols
 
 #S5C
 #highlight enrichment of cell types in blood and in skin type
-
+Idents(bri.integrated) <- 'CellType'
 length(color_scheme)
 rep('gray',22)
 DimPlot(bri.integrated, pt.size=1, cols=rep('gray',22), order = rev(names(color_scheme)), label = TRUE) + NoLegend() + NoAxes() + ggtitle('Integrated')
 DimPlot(subset(bri.integrated, subset = Tissue=='PBMC'), pt.size=1, cols=rep('gray',22), order = rev(names(color_scheme)), label = TRUE) + NoLegend() + NoAxes() + ggtitle('Blood subset') # For legend box and labels to write manually on NoLegend/Nolabel plot below
 DimPlot(subset(bri.integrated, subset = Tissue=='Skin'), pt.size=1, cols=rep('gray',22), order = rev(names(color_scheme)), label = TRUE) + NoLegend() + NoAxes() + ggtitle('Skin subset')# For legend box and labels to write manually on NoLegend/Nolabel plot below
 
+DimPlot(subset(bri.integrated, subset = Tissue=='PBMC'), pt.size=1, cols=rep('red',22), order = rev(names(color_scheme)), label = TRUE) + NoLegend() + NoAxes() + ggtitle('Blood subset') # For legend box and labels to write manually on NoLegend/Nolabel plot below
+DimPlot(subset(bri.integrated, subset = Tissue=='Skin'), pt.size=1, cols=rep('blue',22), order = rev(names(color_scheme)), label = TRUE) + NoLegend() + NoAxes() + ggtitle('Skin subset')# For legend box and labels to write manually on NoLegend/Nolabel plot below
 
 
 
@@ -302,17 +272,13 @@ DimPlot(subset(bri.integrated, subset = Tissue=='Skin'), pt.size=1, cols=rep('gr
 bri.integrated.skin <- readRDS("8-multimodal-sjs-skin-only.rds")
 bri.integrated.pbmc <- readRDS("8-multimodal-sjs-pbmc-only.rds")
 
-bri.integrated.skin <- bri.integrated.skin[,bri.integrated.skin$CellType != 'NA']
-bri.integrated.skin <- bri.integrated.skin[,bri.integrated.skin$CellType != 'Dead']
-DimPlot(bri.integrated.skin, reduction = 'wnn.umap', label = TRUE, cols=color_scheme, order = rev(names(color_scheme)), label.size = 5, pt.size = 1, group.by = "CellType", repel = TRUE) + labs(title = "Cell Type Annotations (Integrated)")
+DimPlot(bri.integrated.skin, reduction = 'wnn.umap', label = TRUE, cols=color_scheme, order = rev(names(color_scheme)), label.size = 5, pt.size = 1, group.by = "CellType", repel = TRUE) + theme(legend.position = 'bottom') + labs(title = "Cell Type Annotations (Integrated)")
 DimPlot(bri.integrated.skin, reduction = 'wnn.umap', label = FALSE, cols=color_scheme, order = rev(names(color_scheme)), label.size = 5, pt.size = 1, group.by = "CellType") + NoAxes() + NoLegend() + labs(title = "Cell Type Annotations (Integrated)")
-DimPlot(bri.integrated.skin, reduction = 'wnn.umap', label = TRUE, label.size = 5, pt.size = 1, group.by = "wsnn_res.1.6", repel = TRUE) + NoAxes() + labs(title = "Cell Type Annotations (Independent clusters)")
+DimPlot(bri.integrated.skin, reduction = 'wnn.umap', label = TRUE, label.size = 5, pt.size = 1, group.by = "Skinclusters", repel = TRUE) + NoAxes() + labs(title = "Cell Type Annotations (Independent clusters)")
 
-bri.integrated.pbmc <- bri.integrated.pbmc[,bri.integrated.pbmc$CellType != 'NA']
-bri.integrated.pbmc <- bri.integrated.pbmc[,bri.integrated.pbmc$CellType != 'Dead']
-DimPlot(bri.integrated.pbmc, reduction = 'wnn.umap', label = TRUE, cols=color_scheme, order = rev(names(color_scheme)), label.size = 5, pt.size = 1, group.by = "CellType", repel = TRUE) + labs(title = "Cell Type Annotations (Integrated)")
+DimPlot(bri.integrated.pbmc, reduction = 'wnn.umap', label = TRUE, cols=color_scheme, order = rev(names(color_scheme)), label.size = 5, pt.size = 1, group.by = "CellType", repel = TRUE) + theme(legend.position = 'bottom') + labs(title = "Cell Type Annotations (Integrated)")
 DimPlot(bri.integrated.pbmc, reduction = 'wnn.umap', label = FALSE, cols=color_scheme, order = rev(names(color_scheme)), label.size = 5, pt.size = 1, group.by = "CellType", repel = TRUE) + NoAxes() + NoLegend() + labs(title = "Cell Type Annotations (Integrated)")
-DimPlot(bri.integrated.pbmc, reduction = 'wnn.umap', label = TRUE, label.size = 5, pt.size = 1, group.by = "wsnn_res.1.2", repel = TRUE) + NoAxes() + labs(title = "Cell Type Annotations (Independent)")
+DimPlot(bri.integrated.pbmc, reduction = 'wnn.umap', label = TRUE, label.size = 5, pt.size = 1, group.by = "PBMCclusters", repel = TRUE) + NoAxes() + labs(title = "Cell Type Annotations (Independent)")
 
 
 #### Heatmap for Supp Fig 6 ####
@@ -324,7 +290,7 @@ DimPlot(bri.integrated.pbmc, reduction = 'wnn.umap', label = TRUE, label.size = 
 
 # match columns and rows
 col_fun = colorRamp2(c(0, 4), c("white", "red"))
-compare_table <- unclass(table(droplevels(bri.integrated.skin$CellType),bri.integrated.skin$wsnn_res.1.6))
+compare_table <- unclass(table(droplevels(bri.integrated.skin$CellType),bri.integrated.skin$Skinclusters))
 compare_table_rev <- max(compare_table) - compare_table
 compare_table_alg <- HungarianSolver(compare_table_rev)
 compare_table_reorder<- compare_table[compare_table_alg$pairs[,1], compare_table_alg$pairs[,2]]
@@ -347,7 +313,7 @@ Heatmap(unclass(compare_table_reorder),
 
 # match columns and rows
 col_fun = colorRamp2(c(0, 4), c("white", "red"))
-compare_table <- unclass(table(droplevels(bri.integrated.pbmc$CellType),bri.integrated.pbmc$wsnn_res.1.6))
+compare_table <- unclass(table(droplevels(bri.integrated.pbmc$CellType),bri.integrated.pbmc$PBMCclusters))
 compare_table_rev <- max(compare_table) - compare_table
 compare_table_alg <- HungarianSolver(compare_table_rev)
 compare_table_reorder<- compare_table[compare_table_alg$pairs[,1], compare_table_alg$pairs[,2]]
